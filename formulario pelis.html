@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Titulo</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Año</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+    <tbody id="cuadro">
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+
+    </tbody>
+    <tbody id="final">
+            <tr>
+                <td>Título</td>
+                <td><input id="editornombre"></input></td>
+            <tr>
+            <td>Género</td>
+            <td><input id="editorgenero"></input></td>
+        </tr>
+        <tr>
+            <td>Año</td>
+            <td><input id="editoraño"></input></td>
+        </tr>
+        <tr>
+           <td> </td>
+           <td> <button type="button" id="guardar">Guardar</button></td>
+
+        </tr>
+    </tbody>
+
+
+
+</table>
+
+<script>
+    var peliculas=[
+        {
+            "id" : 1,
+            "nombre"  :  "El señor de los anillos",
+            "genero"   :  "Accion",
+            "año" : "2010"
+        },
+        {
+            "id" : 2,
+            "nombre"  :  "Regreso al Futuro",
+            "genero"   :  "Accion",
+            "año" : "1982"
+        },
+        {
+            "id" : 3,
+            "nombre"  :  "Casablanca",
+            "genero"   :  "Suspense",
+            "año" : "1949"
+        }];
+console.log(peliculas);
+    var mitabla = document.querySelector("#cuadro");
+    var idfila;
+
+
+    //crear los elementos de mi tabla comprobando si tengo elementos en el array
+
+
+    for (i = 0; i<peliculas.length; i++) {
+        var fila = document.createElement("tr");
+        var celda1 = document.createElement("td");
+        var celda2 = document.createElement("td");
+        var celda3 = document.createElement("td");
+        var celda4 = document.createElement("td");
+        var celda5 = document.createElement("button");
+        var celda6 = document.createElement("button");
+
+        //introducir en los Elementos creados los campos de texto
+        celda1.innerText = (peliculas[i].id);
+        celda2.innerText = (peliculas[i].nombre);
+        celda2.id = "nombre";
+        celda3.innerText = (peliculas[i].genero);
+        celda3.id = "genero";
+        celda4.innerText = (peliculas[i].año);
+        celda4.id = "año";
+        celda5.innerText = ("Editar");
+        celda6.innerText = ("Borrar");
+
+        //introducir los elementos creados en la fila <tr>(padre)
+        fila.appendChild(celda1);
+        fila.appendChild(celda2);
+        fila.appendChild(celda3);
+        fila.appendChild(celda4);
+        fila.appendChild(celda5);
+        fila.appendChild(celda6);
+
+        //introducir mi <tr> creado en mi tabla principal
+        mitabla.appendChild(fila);
+
+
+        fila.id = "fila"+(peliculas[i].id);
+        celda6.id = "editar"+(peliculas[i].id);
+        celda5.id = "borrar"+(peliculas[i].id);
+
+
+        celda6.addEventListener("click",borrar);
+        celda5.addEventListener("click",editar);
+            console.log(fila.id);
+        }
+
+
+    function borrar() {
+    var thisFila = event.target.parentElement;
+    console.log(thisFila);
+    thisFila.parentNode.removeChild(thisFila);
+}
+
+    function editar() {
+        document.querySelector("#guardar").removeEventListener("click",guardar);
+
+
+        var thisFila = event.target.parentElement;
+        var name = thisFila.querySelector("#nombre").textContent;
+        var gender = thisFila.querySelector("#genero").textContent;
+        var year = thisFila.querySelector("#año").textContent;
+        let idfila = event.target.parentElement.id;
+        console.log(idfila);
+
+        var i = event.target.id;
+
+        var nombre1 = name;
+        var genero1 = gender;
+        var año1 = year;
+
+        //agregar valor al imput
+        var editNombre = event.target.parentElement.parentNode.parentNode.querySelector('#editornombre');
+        var editGenero = event.target.parentElement.parentNode.parentNode.querySelector('#editorgenero');
+        var editAnio = event.target.parentElement.parentNode.parentNode.querySelector('#editoraño');
+
+        editNombre.value = nombre1;  //para cambiar texto de imput es value igual para recogerlo
+        editGenero.value = genero1;
+        editAnio.value = año1;
+
+        document.querySelector("#guardar").addEventListener("click",actualizar);
+        document.querySelector("#guardar").innerHTML = ("actualizar");
+
+        // hacemos la funcion actualizar debemos tomar el valor del imput y colocarlo en la celda correspondiente
+        function actualizar() {
+            let fila = document.querySelector("#"+idfila);
+            let titulo = fila.querySelector("#nombre");
+            titulo.innerText = editNombre.value;
+            let genero = fila.querySelector("#genero");
+            genero.innerText = editGenero.value;
+            let año = fila.querySelector("#año");
+            año.innerText = editAnio.value;
+
+            editNombre.value = " ";
+            editAnio.value = " ";
+            editGenero.value = " ";
+
+            document.querySelector("#guardar").removeEventListener("click",actualizar);
+            document.querySelector("#guardar").innerHTML = ("Guardar");
+            document.querySelector("#guardar").addEventListener("click",guardar);
+        }
+    }
+    document.querySelector("#guardar").addEventListener("click",guardar);
+
+    function guardar (event) {
+
+        var editNombre = event.target.parentElement.parentNode.parentNode.querySelector('#editornombre').value;
+        var editGenero = event.target.parentElement.parentNode.parentNode.querySelector('#editorgenero').value;
+        var editAnio = event.target.parentElement.parentNode.parentNode.querySelector('#editoraño').value;
+
+
+
+
+            console.log(typeof editNombre);
+
+            let fila = document.createElement("tr");
+            let celda1 = document.createElement("td");
+            let celda2 = document.createElement("td");
+            let celda3 = document.createElement("td");
+            let celda4 = document.createElement("td");
+            let celda5 = document.createElement("button");
+            let celda6 = document.createElement("button");
+
+            let idnew = document.querySelector("#cuadro").childElementCount;
+            console.log(idnew)
+
+            celda1.innerText = idnew;
+            celda2.innerText = editNombre;
+            celda2.id = "nombre";
+            celda3.innerText = editGenero;
+            celda3.id = "genero";
+            celda4.innerText = editAnio;
+            celda4.id = "año";
+            celda5.innerText = ("Editar");
+            celda6.innerText = ("Borrar");
+
+
+            fila.id = "fila" + idnew + (Math.floor((Math.random())));
+            celda6.id = "editar" + idnew + (Math.floor((Math.random())));
+            celda5.id = "borrar" + idnew + (Math.floor((Math.random())));
+
+
+            fila.appendChild(celda1);
+            fila.appendChild(celda2);
+            fila.appendChild(celda3);
+            fila.appendChild(celda4);
+            fila.appendChild(celda5);
+            fila.appendChild(celda6);
+
+            mitabla.appendChild(fila);
+
+            celda6.addEventListener("click", borrar);
+            celda5.addEventListener("click", editar);
+        }
+
+
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
